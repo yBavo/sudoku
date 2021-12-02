@@ -4,8 +4,9 @@ import GrilleContext from "../contexts/grilleContext";
 import GrilleLines from "./GrilleLines";
 
 const Grille = () => {
-  const { grille } = useContext(GrilleContext);
-  console.log("GRID\n");
+  const { state } = useContext(GrilleContext);
+  const { grille } = state;
+
   return (
     <GridContainer>
       {grille.map((line, l) => (

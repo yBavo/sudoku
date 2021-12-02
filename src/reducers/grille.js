@@ -1,4 +1,7 @@
-const initGrid = () => {
+import { GRILLE_START } from "../data";
+import { randomGrilleIndice } from "../helpers/grille";
+
+export const initGrid = () => {
   const newGrid = [];
   const line = [null, null, null, null, null, null, null, null, null];
 
@@ -9,27 +12,71 @@ const initGrid = () => {
   return newGrid;
 };
 
-const gridStart = [
-  [5, null, 3, null, null, null, 8, null, 9],
-  [null, 4, null, null, null, null, null, 3, null],
-  [9, null, null, 6, 3, 8, null, null, 7],
-  [null, null, 7, 4, null, 1, 5, null, null],
-  [null, null, 4, null, 2, null, 7, null, null],
-  [null, null, 5, 9, null, 3, 1, null, null],
-  [8, null, null, 1, 9, 7, null, null, 4],
-  [null, 1, null, null, null, null, null, 7, null],
-  [4, null, 9, null, null, null, 2, null, 5],
-];
+export const initialState = {
+  cellSelected: {},
+  grille: initGrid(),
+  grilleIndice: null,
+  grilleSaved: [],
+  grilleStart: [],
+  numpadNSelected: null,
+};
 
-export default (state = initGrid(), { type, payload }) => {
-  console.log("REDUCER\n", state);
+const reducer = (state = initGrid, { type, payload }) => {
+  console.log("\tREDUCER\n", state);
   switch (type) {
+    case "ANNULER":
+      return payload;
     case "LOAD":
-      console.log("Loading grille");
-      return gridStart;
+      if (!GRILLE_START.length) return state;
+
+      const newGrilleIndice = randomGrilleIndice(state.grilleIndice);
+      const newGrille = GRILLE_START[newGrilleIndice].map((line) => [...line]);
+      const newGrilleStart = GRILLE_START[newGrilleIndice].map((line) => [
+        ...line,
+      ]);
+      return {
+        ...initialState,
+        grille: newGrille,
+        grilleStart: newGrilleStart,
+        grilleIndice: newGrilleIndice,
+      };
+    case "SET_N":
+      console.log("\tREDUCER SET", payload);
+      // const { l, c } = payload.pos;
+
+      // // Si case de départ ou aucun chiffre de sélectionné...
+      // if (!!!state.grilleStart[l][c] || !!!state.numpadNSelected) {
+      //   return {
+      //     ...state,
+      //     cellSelected: payload.pos,
+      //   };
+      // }
+
+      // const newGrille2 = state.grille.map((line) => [...line]); // Copie la grille
+      // newGrille2[l][c] =
+      //   state.numpadNSelected === 0 ? null : state.numpadNSelected; // Efface ou mettre le chiffre sélectionné dans la nouvelle grille
+      // return {
+      //   ...state,
+      //   cellSelected: payload.pos,
+      //   grille: newGrille2,
+      //   grilleSaved: [
+      //     ...state.grilleSaved,
+      //     newGrille2.map((line) => [...line]),
+      //   ],
+      // };
+      return state;
     case "RESET":
-      return initGrid();
+      return {
+        ...state,
+        grille: state.grilleStart,
+        cellSelected: {},
+        grilleSaved: [],
+        numpadSelected: null,
+      };
+
     default:
       return state;
   }
 };
+
+export default reducer;

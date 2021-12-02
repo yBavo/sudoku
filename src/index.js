@@ -3,10 +3,13 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./containers/App";
 import reportWebVitals from "./reportWebVitals";
+import { GrilleProvider } from "./contexts/grilleContext";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <GrilleProvider>
+      <App />
+    </GrilleProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
