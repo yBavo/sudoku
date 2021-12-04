@@ -9,5 +9,3 @@ export const randomGrilleIndice = (grilleIndice) => {
 
   return randGrille;
 };
-
-export const copieGrille = () => {};

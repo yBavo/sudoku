@@ -25,53 +25,66 @@ const reducer = (state = initGrid, { type, payload }) => {
   console.log("\tREDUCER\n", state);
   switch (type) {
     case "ANNULER":
-      return payload;
+      const len = state.grilleSaved.length - 1;
+      const newGrilleSave = state.grilleSaved.filter((g, i) => i < len);
+      console.log("ANNULER - len", len, newGrilleSave);
+      return {
+        ...state,
+        cellSelected: {},
+        grille: newGrilleSave[len - 1].map((line) => [...line]),
+        grilleSaved: newGrilleSave,
+        numpadNSelected: null,
+      };
+
     case "LOAD":
       if (!GRILLE_START.length) return state;
 
       const newGrilleIndice = randomGrilleIndice(state.grilleIndice);
-      const newGrille = GRILLE_START[newGrilleIndice].map((line) => [...line]);
+      const newLoadGrille = GRILLE_START[newGrilleIndice].map((line) => [
+        ...line,
+      ]);
       const newGrilleStart = GRILLE_START[newGrilleIndice].map((line) => [
         ...line,
       ]);
+
       return {
         ...initialState,
-        grille: newGrille,
+        grille: newLoadGrille,
         grilleStart: newGrilleStart,
         grilleIndice: newGrilleIndice,
       };
-    case "SET_N":
-      console.log("\tREDUCER SET", payload);
-      // const { l, c } = payload.pos;
 
-      // // Si case de départ ou aucun chiffre de sélectionné...
-      // if (!!!state.grilleStart[l][c] || !!!state.numpadNSelected) {
-      //   return {
-      //     ...state,
-      //     cellSelected: payload.pos,
-      //   };
-      // }
+    case "UPDATE_CELL_SELECTED":
+      return {
+        ...state,
+        cellSelected: payload,
+      };
 
-      // const newGrille2 = state.grille.map((line) => [...line]); // Copie la grille
-      // newGrille2[l][c] =
-      //   state.numpadNSelected === 0 ? null : state.numpadNSelected; // Efface ou mettre le chiffre sélectionné dans la nouvelle grille
-      // return {
-      //   ...state,
-      //   cellSelected: payload.pos,
-      //   grille: newGrille2,
-      //   grilleSaved: [
-      //     ...state.grilleSaved,
-      //     newGrille2.map((line) => [...line]),
-      //   ],
-      // };
-      return state;
+    case "UPDATE_GRILLE":
+      const { l, c } = payload;
+      const newGrille = state.grille.map((line) => [...line]); // Copie la grille
+      newGrille[l][c] = state.numpadNSelected;
+
+      return {
+        ...state,
+        cellSelected: payload,
+        grille: newGrille,
+        grilleSaved: [...state.grilleSaved, newGrille.map((line) => [...line])],
+      };
+
     case "RESET":
       return {
         ...state,
         grille: state.grilleStart,
         cellSelected: {},
         grilleSaved: [],
-        numpadSelected: null,
+        numpadNSelected: null,
+      };
+
+    case "UPDATE_NUMPAD_SELECTION":
+      return {
+        ...state,
+        numpadNSelected: payload,
       };
 
     default:

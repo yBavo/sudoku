@@ -3,11 +3,12 @@ import styled from "styled-components";
 import GrilleContext from "../contexts/grilleContext";
 
 const NumpadCell = ({ n }) => {
-  const { numpadNSelected, setNumpadNSelected } = useContext(GrilleContext);
+  const { state, updateNumpadSelection } = useContext(GrilleContext);
+  const { numpadNSelected } = state;
 
   return (
     <CellContainer
-      onClick={() => setNumpadNSelected(n)}
+      onClick={() => updateNumpadSelection(n)}
       active={numpadNSelected === n}
     >
       <CellText>{n}</CellText>

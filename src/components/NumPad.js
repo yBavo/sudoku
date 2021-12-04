@@ -10,7 +10,8 @@ const NUM = [
 ];
 
 const NumPad = () => {
-  const { numpadNSelected, setNumpadNSelected } = useContext(GrilleContext);
+  const { state, updateNumpadSelection } = useContext(GrilleContext);
+  const { numpadNSelected, grilleSaved } = state;
 
   return (
     <NumPadContainer>
@@ -22,8 +23,9 @@ const NumPad = () => {
         </NumPadLine>
       ))}
       <CellContainer
-        active={numpadNSelected === 0}
-        onClick={() => setNumpadNSelected(0)}
+        disabled={!grilleSaved.length}
+        active={grilleSaved.length && numpadNSelected === null}
+        onClick={() => updateNumpadSelection(null)}
       >
         <CellText>Effacer</CellText>
       </CellContainer>

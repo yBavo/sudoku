@@ -4,7 +4,8 @@ import NumPad from "../components/NumPad";
 import GrilleContext from "../contexts/grilleContext";
 
 const App = () => {
-  const { annuler, grilleSaved, load, reset } = useContext(GrilleContext);
+  const { annuler, state, load, reset } = useContext(GrilleContext);
+  const { grilleSaved } = state;
 
   useEffect(() => {
     load();
@@ -16,7 +17,7 @@ const App = () => {
       <NumPad />
       <button onClick={() => load()}>Load</button>
       <button onClick={() => reset()}>Reset</button>
-      <button disabled={!!!grilleSaved.length} onClick={() => annuler()}>
+      <button disabled={!grilleSaved.length} onClick={() => annuler()}>
         Annuler
       </button>
     </div>

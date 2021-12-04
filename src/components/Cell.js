@@ -4,11 +4,12 @@ import styled from "styled-components";
 import GrilleContext from "../contexts/grilleContext";
 
 const Cell = ({ num = null, pos = {} }) => {
-  const { cellSelected, grilleStart, updateGrille, useBlock } =
-    useContext(GrilleContext);
+  const { useBlock, state, updateGrille } = useContext(GrilleContext);
+  const { cellSelected, grilleStart } = state;
+
   const block = useBlock(pos);
   const blockSelected = useBlock(cellSelected);
-  const fromStart = !!grilleStart && grilleStart[pos.l][pos.c] !== null ? 1 : 0;
+  const cellStart = grilleStart.length && !!grilleStart[pos.l][pos.c] ? 1 : 0;
 
   return (
     <Container>
@@ -18,7 +19,7 @@ const Cell = ({ num = null, pos = {} }) => {
         sameBlock={block === blockSelected}
         onClick={() => updateGrille(pos)}
       >
-        <CellText start={fromStart}>{num}</CellText>
+        <CellText start={cellStart}>{num}</CellText>
       </CellButton>
     </Container>
   );
